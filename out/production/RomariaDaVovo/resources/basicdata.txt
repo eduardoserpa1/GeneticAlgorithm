@@ -1,0 +1,8 @@
+7
+1.0 1.0 cidade1
+3.0 1.0 cidade2
+4.0 2.0 cidade3
+2.0 1.5 cidade4
+4.0 4.0 cidade5
+5.0 10.0 cidade6
+0.0 3.0 cidade7
