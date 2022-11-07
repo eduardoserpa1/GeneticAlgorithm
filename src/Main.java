@@ -134,7 +134,7 @@ public class Main {
             population = load_state(checkpoint_filename);
         }else{
             for (int i = 1; i < first_population_length; i++) {
-                population.add(make_mutation(greedy,first_population_amount_of_mutations));
+                population.add(make_mutation(greedy,first_population_amount_of_mutations,true));
             }
 
             Collections.sort(population);
@@ -182,8 +182,12 @@ public class Main {
                 for (int k = 0; k < amount_avaible_for_elite; k++) {
                     Route child1 = make_child(elite.get(j), avaible_to_elite.get(k));
                     Route child2 = make_child(avaible_to_elite.get(k), elite.get(j));
-                    population.add(make_mutation(child1,amount_mutations));
-                    population.add(make_mutation(child2,amount_mutations));
+                    boolean sequencial = false;
+                    if(actual_it % 2 == 0){
+                        sequencial = true;
+                    }
+                    population.add(make_mutation(child1,amount_mutations,sequencial));
+                    population.add(make_mutation(child2,amount_mutations,sequencial));
                     amount_generated_units += 2;
                 }
             }
@@ -267,7 +271,7 @@ public class Main {
         return new Route(cities);
     }
 
-    static Route make_mutation(Route route, int amount){
+    static Route make_mutation(Route route, int amount, boolean is_sequencial){
         ArrayList<City> cities = new ArrayList<>();
         cities.addAll(route.getCity_order());
 
@@ -279,7 +283,14 @@ public class Main {
         int i = 0;
         while (i < amount) {
             int n1 = r.nextInt(cities.size());
-            int n2 = r.nextInt(cities.size());
+            int n2 = n1 + 1;
+
+            if(n2 > route.getCity_order().size()-1)
+                n2 = 0;
+
+            if(!is_sequencial){
+                n2 = r.nextInt(cities.size());
+            }
 
             if(n1 != n2){
                 City c1 = cities.get(n1);
@@ -310,7 +321,7 @@ public class Main {
         int index_cities_avaible = 0;
 
         while(cities_avaible.size() > 0){
-            double min_distance = 99999999d;
+            double min_distance = 99999999999d;
             int index_of_city = -1;
             for (int i = 0; i < cities_avaible.size(); i++) {
                 double actual_distance = cities_visited.get(index_cities_avaible).get_distance(cities_avaible.get(i));
